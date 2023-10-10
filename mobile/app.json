@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "espektrum-bank",
+    "slug": "espektrum-bank",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

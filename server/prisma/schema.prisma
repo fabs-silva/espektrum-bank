@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  birthday DateTime
+  birth_country String
+  genre_identity String
+  cpf String @unique
+  identification String @unique
+  issuing_body String
+  issuing_state String
+  addresses Address[]
+  emails Email[]
+  telephones Telephone[]
+  account Account?
+  selfie_url String
+}
+
+model Address {
+  id String @id @default(uuid())
+  street String
+  number String
+  complement String?
+  district String
+  city String
+  state String
+  cep String
+  user_id String
+  user User @relation(fields: [user_id], references: [id] )
+}
+
+model Email {
+  id String @id @default(uuid())
+  email_address String
+  user_id String?
+  user User? @relation(fields: [user_id], references: [id] )
+  supervisor_id String?
+  supervisor Supervisor? @relation(fields: [supervisor_id], references: [id] )
+}
+
+model Telephone {
+  id String @id @default(uuid())
+  phone_number String
+  user_id String?
+  user User? @relation(fields: [user_id], references: [id] )
+  supervisor_id String?
+  supervisor Supervisor? @relation(fields: [supervisor_id], references: [id] )
+}
+
+model Account {
+  id String @id @default(uuid())
+  account_type String
+  account_number Int @unique
+  password String
+  balance Decimal @default(0.0)
+  pix_keys PixKey[]
+  transactions Transaction[]
+  user_id String @unique
+  user User @relation(fields: [user_id], references: [id] )
+  created_at DateTime @default(now())
+  supervisor_id String?
+  supervisor Supervisor? @relation(fields: [supervisor_id], references: [id] )
+}
+
+model Supervisor {
+  id String @id @default(uuid())
+  name String
+  birthday DateTime
+  genre_identity String
+  cpf String @unique
+  identification String @unique
+  issuing_body String
+  issuing_state String
+  emails Email[]
+  telephones Telephone[]
+  password String
+  supervised_accounts Account[]
+}
+
+model PixKey {
+  id String @id @default(uuid())
+  key String @unique
+  key_type String
+  account_id String @unique
+  account Account @relation(fields: [account_id], references: [id] )
+  created_at DateTime @default(now())
+}
+
+model Transaction {
+  id String @id @default(uuid())
+  type String
+  debit_credit String
+  value Decimal
+  comment String?
+  status String
+  receiver_id String @unique
+  receiver Receiver @relation(fields: [receiver_id], references: [id] )
+  account_id String @unique
+  account Account @relation(fields: [account_id], references: [id] )
+  created_at DateTime @default(now())
+  approved_at DateTime?
+  settled_at DateTime?
+}
+
+model Receiver {
+  id String @id @default(uuid())
+  name String
+  document_type String
+  document_number String @unique
+  pix_key String? @unique
+  bank String
+  transaction Transaction[]
+}
