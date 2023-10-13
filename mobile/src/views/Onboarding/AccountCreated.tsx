@@ -1,14 +1,26 @@
 import {
-	Box,
 	Button,
 	ButtonText,
 	Heading,
 	Text,
-	VStack,
+	VStack
 } from '@gluestack-ui/themed';
+import { CommonActions } from '@react-navigation/native';
 import { Logo } from '../../components/Logo';
+import { capitalizeFirstLetter } from '../../utils/utilfunctions';
 
-export function AccountCreated() {
+export function AccountCreated({ route, navigation }) {
+	const { client } = route.params;
+
+	const pressButtonLogin = () => {
+		navigation.dispatch(
+			CommonActions.reset({
+				index: 0,
+				routes: [{ name: 'LoginClient', params: { accountNumber: client.account_number } }],
+			}),
+		);
+	};
+
 	return (
 		<VStack
 			flex={1}
@@ -41,12 +53,12 @@ export function AccountCreated() {
 						que você as anote em um local seguro, pois você precisará delas para
 						fazer login.
 					</Text>
-					<Box
-						borderColor="$borderDark800"
-						borderRadius="$lg"
-						borderWidth="$1"
-						overflow="hidden"
-						p="$4">
+					<VStack 
+							p="$4" 
+							borderRadius={5}
+							borderWidth="$1"
+							borderColor="$borderDark900"
+						>
 						<Text
 							size="lg"
 							mb="$4">
@@ -54,8 +66,8 @@ export function AccountCreated() {
 								size="lg"
 								fontWeight="$bold">
 								Agência:{' '}
-							</Text>{' '}
-							1
+							</Text>
+							01
 						</Text>
 						<Text
 							size="lg"
@@ -65,7 +77,7 @@ export function AccountCreated() {
 								fontWeight="$bold">
 								Número da Conta:{' '}
 							</Text>{' '}
-							76235
+							{client.account.account_number}
 						</Text>
 						<Text size="lg">
 							<Text
@@ -73,15 +85,15 @@ export function AccountCreated() {
 								fontWeight="$bold">
 								Tipo de Conta:{' '}
 							</Text>{' '}
-							1 - Independente
+							{capitalizeFirstLetter(client.account.account_type)}
 						</Text>
-					</Box>
+					</VStack>
 				</VStack>
 				<Button
 					variant="solid"
 					size="xl"
-					onPress={() => null}>
-					<ButtonText>Criar senha</ButtonText>
+					onPress={() => pressButtonLogin()}>
+					<ButtonText>Entrar na conta</ButtonText>
 				</Button>
 			</VStack>
 		</VStack>

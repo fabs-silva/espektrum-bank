@@ -19,16 +19,16 @@ import React, { useState } from 'react';
 import { Image, ScrollView } from 'react-native';
 import { ContainerOnboarding } from '../../components/ContainerOnboarding';
 
-export default function SelfieInstructions() {
+export function SelfieInstructions({navigation}) {
 	const [showAlertDialog, setShowAlertDialog] = useState(false);
 	return (
 		<ScrollView>
 			<ContainerOnboarding
 				step={6}
-				stepCount={7}
+				stepCount={8}
 				title={'6 Selfie'}
 				buttonTitle={'Tirar Selfie'}
-				onPress={() => null}>
+				onPress={() => navigation.navigate('TakeSelfie')}>
 				<Text
 					mt="$4"
 					mb="$4"

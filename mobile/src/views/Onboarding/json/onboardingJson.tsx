@@ -1,7 +1,5 @@
-import { KeyboardTypeOptions } from 'react-native';
 import IndependentAccount from '../../../assets/independent_account.svg';
 import SupervisedAccount from '../../../assets/supervised_account.svg';
-import { InputJsonType } from '../../Login/json/loginJson';
 
 export type accountTypeJsonType = {
 	id: number;
@@ -24,114 +22,9 @@ export const accountTypeJson: accountTypeJsonType[] = [
 	},
 	{
 		id: 2,
-		title: 'Supervisionado',
+		title: 'Supervisionada',
 		description: 'Você escolhe alguém para aprovar suas transações.',
 		image: <SupervisedAccount width={80} />,
-	},
-];
-
-export const basicInfoJson: InputJsonType[] = [
-	{
-		id: 1,
-		label: 'Nome Completo',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 2,
-		label: 'País de nascimento',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-];
-
-export const documentsJson: InputJsonType[] = [
-	{
-		id: 1,
-		label: 'CPF',
-		inputType: 'text',
-		keyboardType: 'numeric' as KeyboardTypeOptions,
-		maxLength: 11,
-	},
-	{
-		id: 2,
-		label: 'Documento de identificação',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 3,
-		label: 'Órgão emissor',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 4,
-		label: 'Estado de emissão',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-];
-
-export const addressJson: InputJsonType[] = [
-	{
-		id: 1,
-		label: 'CEP',
-		inputType: 'text',
-		keyboardType: 'numeric' as KeyboardTypeOptions,
-		maxLength: 8,
-	},
-	{
-		id: 2,
-		label: 'Rua',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 3,
-		label: 'Número',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 4,
-		label: 'Complemento (não obrigatório)',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 5,
-		label: 'Bairro',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 6,
-		label: 'Cidade',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-	{
-		id: 7,
-		label: 'Estado',
-		inputType: 'text',
-		keyboardType: 'default' as KeyboardTypeOptions,
-	},
-];
-
-export const contactsJson: InputJsonType[] = [
-	{
-		id: 1,
-		label: 'Telefone celular (com DDD)',
-		inputType: 'text',
-		keyboardType: 'phone-pad' as KeyboardTypeOptions,
-		maxLength: 11,
-	},
-	{
-		id: 2,
-		label: 'Email',
-		inputType: 'text',
-		keyboardType: 'email-address' as KeyboardTypeOptions,
 	},
 ];
 
@@ -141,6 +34,17 @@ export const genderIdentityList: string[] = [
 	'Mulher transgênero',
 	'Homem transgênero',
 	'Não binário',
+	'Outro',
+];
+
+export const degreeKinshipList: string[] = [
+	'Pai/mãe',
+	'Irmão/irmã',
+	'Avô/avó',
+	'Padrasto/madrasta',
+	'Primo(a)',
+	'Amigo(a)',
+	'Tutor(a)',
 	'Outro',
 ];
 

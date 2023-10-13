@@ -20,8 +20,6 @@ export async function authRoutes(app: FastifyInstance) {
 
 		const isPasswordValid = await bcrypt.compare(password, account.password);
 
-		console.log(isPasswordValid)
-
 		if(!isPasswordValid){
 			return reply.status(401).send();
 		}

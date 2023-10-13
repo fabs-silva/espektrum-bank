@@ -14,29 +14,43 @@ import {
 	Text,
 	VStack,
 } from '@gluestack-ui/themed';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { ContainerOnboarding } from '../../components/ContainerOnboarding';
+import { RegisterClientStore } from '../../utils/store';
 import { accountTypeJson, accountTypeJsonType } from './json/onboardingJson';
 
-export default function AccountType() {
+export function AccountType({ navigation }) {
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			headerLeft: () => null,
+		});
+	}, [navigation]);
+
 	const [showAlertDialog, setShowAlertDialog] = useState(false);
 	const [accountType, setAccountType] = useState('');
+
+	const onSubmit = () => {
+		RegisterClientStore.update((s) => {
+			s.account_type = accountType;
+		});
+		navigation.navigate('BasicInfo');
+	};
 
 	return (
 		<ContainerOnboarding
 			step={1}
-			stepCount={7}
+			stepCount={8}
 			title={'1 Tipo de Conta'}
 			buttonTitle={'Próximo'}
-			onPress={() => null}>
+			onPress={() => onSubmit()}>
 			<VStack
 				gap={32}
 				mt="$6">
 				{accountTypeJson.map((at: accountTypeJsonType) => {
 					const onSelectAccount = () => {
 						setAccountType(at.title.toLowerCase());
-						if (at.title === 'Supervisionado') {
+						if (at.title === 'Supervisionada') {
 							setShowAlertDialog(true);
 						}
 					};

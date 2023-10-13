@@ -24,7 +24,7 @@ import { Keyboard, ScrollView } from 'react-native';
 import { ContainerOnboarding } from '../../components/ContainerOnboarding';
 import { RegisterClientStore } from '../../utils/store';
 
-export function Documents({ navigation }) {
+export function SupervisorDocuments({ navigation }) {
 	const [showAlertDialog, setShowAlertDialog] = useState(false);
 	const [cpf, setCpf] = useState("");
 	const [identification, setIdentification] = useState("");
@@ -70,20 +70,20 @@ export function Documents({ navigation }) {
 
 	 const onSubmit = () => {
     RegisterClientStore.update((s) => {
-			s.cpf = cpf;
-			s.identification = identification;
-			s.issuing_body = issuingBody;
-			s.issuing_state = issuingState;
+			s.supervisor_cpf = cpf;
+			s.supervisor_identification = identification;
+			s.supervisor_issuing_body = issuingBody;
+			s.supervisor_issuing_state = issuingState;
     });
-    navigation.navigate("FindCep");
+    navigation.navigate("SupervisorPassword");
   };
 
 	return (
 		<ScrollView>
 			<ContainerOnboarding
-				step={3}
-				stepCount={8}
-				title={'3 Documentos'}
+				step={2}
+				stepCount={3}
+				title={'2 Documentos - responsável'}
 				buttonTitle={'Próximo'}
 				onPress={() => validate()}>
 				<Text

@@ -17,7 +17,6 @@ export function CheckCpf({ navigation }) {
 	const [cpf, setCpf] = useState('');
 
 	async function findCpf(cpf: string) {
-		console.log(cpf);
 		try {
 			const response = await api.post('/findUserCpf', { cpf });
 

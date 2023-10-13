@@ -177,6 +177,7 @@ export async function signUpRoutes(app: FastifyInstance) {
 				password: z.string(),
 				supervisor_name: z.string(),
 				supervisor_birthday: z.coerce.date(),
+				supervisor_degree_kinship: z.string(),
 				supervisor_genre_identity: z.string(),
 				supervisor_cpf: z.string(),
 				supervisor_identification: z.string(),
@@ -210,6 +211,7 @@ export async function signUpRoutes(app: FastifyInstance) {
 				password,
 				supervisor_name,
 				supervisor_birthday,
+				supervisor_degree_kinship,
 				supervisor_genre_identity,
 				supervisor_cpf,
 				supervisor_identification,
@@ -229,6 +231,7 @@ export async function signUpRoutes(app: FastifyInstance) {
 				data: {
 					name: supervisor_name,
 					birthday: supervisor_birthday,
+					degree_kinship: supervisor_degree_kinship,
 					genre_identity: supervisor_genre_identity,
 					cpf: supervisor_cpf,
 					identification: supervisor_identification,
@@ -345,7 +348,7 @@ export async function signUpRoutes(app: FastifyInstance) {
 		await pump(upload.file, writeStream);
 
 		const fullUrl = request.protocol.concat('://').concat(request.hostname);
-		const fileUrl = new URL('/uploads/${fileName}', fullUrl).toString();
+		const fileUrl = new URL(`/uploads/${fileName}`, fullUrl).toString();
 
 		return { fileUrl };
 	});

@@ -8,23 +8,6 @@ export type InputJsonType = {
 	maxLength?: number;
 };
 
-export const loginPasswordJson: InputJsonType[] = [
-	{
-		id: 1,
-		label: 'Número da conta',
-		inputType: 'text',
-		keyboardType: 'numeric' as KeyboardTypeOptions,
-		maxLength: 7,
-	},
-	{
-		id: 2,
-		label: 'Senha',
-		inputType: 'password',
-		keyboardType: 'numeric' as KeyboardTypeOptions,
-		maxLength: 8,
-	},
-];
-
 export const loginSupervisorJson: InputJsonType[] = [
 	{
 		id: 1,

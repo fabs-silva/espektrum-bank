@@ -10,7 +10,7 @@ import { Keyboard } from 'react-native';
 import { ContainerOnboarding } from '../../components/ContainerOnboarding';
 import { RegisterClientStore } from '../../utils/store';
 
-export function CreatePassword({ navigation }) {
+export function SupervisorPassword({ navigation }) {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -53,24 +53,24 @@ export function CreatePassword({ navigation }) {
 
 	 const onSubmit = () => {
     RegisterClientStore.update((s) => {
-			s.password = password;
+			s.supervisor_password = password;
     });
     
-		navigation.navigate("ConfirmData");
+		navigation.navigate("SupervisorConfirmData");
   };
 
 	return (
 		<ContainerOnboarding
-			step={7}
-			stepCount={8}
-			title={'8 Cadastre sua senha'}
+			step={3}
+			stepCount={4}
+			title={'3 Senha - resposável'}
 			buttonTitle={'Confirmar dados'}
 			onPress={() => validate()}>
-				<Text
+			<Text
 				size="xl"
 				mb="$6">
 				Essa senha deve ter oito números. Ela será utilizada para fazer o login
-				e também para confirmar suas transações.
+				e também para aprovar as transações do cliente supervisionado.
 			</Text>
 			<FormControl
 				gap={32}

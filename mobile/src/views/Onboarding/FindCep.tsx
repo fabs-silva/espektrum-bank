@@ -5,17 +5,36 @@ import {
 	Text,
 	VStack,
 } from '@gluestack-ui/themed';
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import { ContainerOnboarding } from '../../components/ContainerOnboarding';
 
-export default function FindCep() {
+export function FindCep({ navigation }) {
+
+	const [cep, setCep] = useState("");
+	
+	const findCepApi = () => {
+		axios.get(`https://brasilapi.com.br/api/cep/v2/${cep}`).then((response) => {
+			navigation.navigate('FullAddress', {
+				cep: cep,
+				street: response.data.street,
+				district: response.data.neighborhood,
+				city: response.data.city,
+				state: response.data.state
+			})
+		}).catch((error) => {
+			Alert.alert("Erro", "Não foi possível encontrar seu CEP.");
+		})
+	}
+
 	return (
 		<ContainerOnboarding
 			step={4}
-			stepCount={7}
+			stepCount={8}
 			title={'4 Endereço'}
 			buttonTitle={'Buscar CEP'}
-			onPress={() => null}>
+			onPress={() => findCepApi()}>
 			<FormControl
 				gap={32}
 				mt="$6"
@@ -29,6 +48,8 @@ export default function FindCep() {
 							type="text"
 							keyboardType="numeric"
 							maxLength={8}
+							onChangeText={setCep}
+							value={cep}
 						/>
 					</Input>
 				</VStack>

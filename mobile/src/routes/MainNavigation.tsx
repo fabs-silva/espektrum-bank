@@ -6,18 +6,22 @@ import { NotLogged } from '../views/Login/NotLogged';
 import { AlreadyRegistered } from '../views/NewAccount/AlreadyRegistered';
 import { CheckCpf } from '../views/NewAccount/CheckCpf';
 import { AccountCreated } from '../views/Onboarding/AccountCreated';
-import AccountType from '../views/Onboarding/AccountType';
-import BasicInfo from '../views/Onboarding/BasicInfo';
-import Contacts from '../views/Onboarding/Contacts';
+import { AccountType } from '../views/Onboarding/AccountType';
+import { BasicInfo } from '../views/Onboarding/BasicInfo';
+import { ConfirmData } from '../views/Onboarding/ConfirmData';
+import { Contacts } from '../views/Onboarding/Contacts';
 import { CreatePassword } from '../views/Onboarding/CreatePassword';
-import Documents from '../views/Onboarding/Documents';
-import FindCep from '../views/Onboarding/FindCep';
-import FullAddress from '../views/Onboarding/FullAddress';
+import { Documents } from '../views/Onboarding/Documents';
+import { FindCep } from '../views/Onboarding/FindCep';
+import { FullAddress } from '../views/Onboarding/FullAddress';
 import { OnboardingWelcome } from '../views/Onboarding/OnboardingWelcome';
-import { PasswordCreated } from '../views/Onboarding/PasswordCreated';
-import PasswordSupervisor from '../views/Onboarding/PasswordSupervisor';
-import Selfie from '../views/Onboarding/Selfie';
-import SelfieInstructions from '../views/Onboarding/SelfieInstructions';
+import { Selfie } from '../views/Onboarding/Selfie';
+import { SelfieInstructions } from '../views/Onboarding/SelfieInstructions';
+import { SupervisorBasicInfo } from '../views/Onboarding/SupervisorBasicInfo';
+import { SupervisorConfirmData } from '../views/Onboarding/SupervisorConfirmData';
+import { SupervisorDocuments } from '../views/Onboarding/SupervisorDocuments';
+import { SupervisorPassword } from '../views/Onboarding/SupervisorPassword';
+import { TakeSelfie } from '../views/Onboarding/TakeSelfie';
 
 const Stack = createNativeStackNavigator();
 
@@ -104,6 +108,11 @@ export function MainNavigation() {
 					options={{ title: 'Selfie' }}
 				/>
 				<Stack.Screen
+					name="TakeSelfie"
+					component={TakeSelfie}
+					options={{ title: 'Selfie' }}
+				/>
+				<Stack.Screen
 					name="Selfie"
 					component={Selfie}
 					options={{ title: 'Selfie' }}
@@ -119,14 +128,29 @@ export function MainNavigation() {
 					options={{ title: 'Criar senha' }}
 				/>
 				<Stack.Screen
-					name="PasswordCreated"
-					component={PasswordCreated}
-					options={{ title: 'Senha criada' }}
+					name="ConfirmData"
+					component={ConfirmData}
+					options={{ title: 'Confirmar dados'}}
 				/>
 				<Stack.Screen
-					name="PasswordSupervisor"
-					component={PasswordSupervisor}
+					name="SupervisorBasicInfo"
+					component={SupervisorBasicInfo}
+					options={{ title: 'Dados do responsável' }}
+				/>
+				<Stack.Screen
+					name="SupervisorDocuments"
+					component={SupervisorDocuments}
+					options={{ title: 'Documentos do responsável' }}
+				/>
+				<Stack.Screen
+					name="SupervisorPassword"
+					component={SupervisorPassword}
 					options={{ title: 'Senha do responsável' }}
+				/>
+				<Stack.Screen
+					name="SupervisorConfirmData"
+					component={SupervisorConfirmData}
+					options={{ title: 'Confirmar dados' }}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>
