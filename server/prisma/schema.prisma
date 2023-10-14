@@ -105,9 +105,9 @@ model Transaction {
   value Decimal
   comment String?
   status String
-  receiver_id String @unique
+  receiver_id String
   receiver Receiver @relation(fields: [receiver_id], references: [id] )
-  account_id String @unique
+  account_id String
   account Account @relation(fields: [account_id], references: [id] )
   created_at DateTime @default(now())
   approved_at DateTime?

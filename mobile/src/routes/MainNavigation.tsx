@@ -22,6 +22,8 @@ import { SupervisorConfirmData } from '../views/Onboarding/SupervisorConfirmData
 import { SupervisorDocuments } from '../views/Onboarding/SupervisorDocuments';
 import { SupervisorPassword } from '../views/Onboarding/SupervisorPassword';
 import { TakeSelfie } from '../views/Onboarding/TakeSelfie';
+import { Home } from '../views/Transactions/Home';
+import { HomeSupervisor } from '../views/Transactions/HomeSupervisor';
 
 const Stack = createNativeStackNavigator();
 
@@ -151,6 +153,16 @@ export function MainNavigation() {
 					name="SupervisorConfirmData"
 					component={SupervisorConfirmData}
 					options={{ title: 'Confirmar dados' }}
+				/>
+				<Stack.Screen
+					name="Home"
+					component={Home}
+					options={{ title: 'Página inicial' }}
+				/>
+				<Stack.Screen
+					name="HomeSupervisor"
+					component={HomeSupervisor}
+					options={{ title: 'Página inicial' }}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>

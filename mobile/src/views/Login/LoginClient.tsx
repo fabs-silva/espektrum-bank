@@ -8,9 +8,11 @@ import {
 	Text,
 	VStack,
 } from '@gluestack-ui/themed';
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from 'react';
-import { Keyboard } from 'react-native';
+import { Alert, Keyboard } from 'react-native';
 import { Logo } from '../../components/Logo';
+import { api } from '../../utils/axios';
 
 export function LoginClient( { navigation, route }) {
 
@@ -40,8 +42,26 @@ export function LoginClient( { navigation, route }) {
 		}
 	}
 
-	const onSubmit = () => {
-		return null
+	const onSubmit = async () => {
+		api.post('/signIn/client', {
+			account_number: parseInt(accountNumberInput),
+			password: passwordInput,
+		}).then(response => {
+			const { token,  user_name } = response.data;
+
+			SecureStore.setItemAsync("token", token);
+
+			navigation.navigate('Home', {
+				user_name,
+			})
+		}).catch(error => {
+			console.log(JSON.stringify(error.response.data.message))
+			if(error.response.status === 401 || error.response.data.message === 'No Account found'){
+				Alert.alert('Erro', 'Número da conta e/ou senha inválidos.');
+			} else {
+				Alert.alert('Erro', 'Não foi possível realizar o login.');
+			}
+		});
 	}
 	
 	return (
@@ -92,13 +112,14 @@ export function LoginClient( { navigation, route }) {
 					w="100%">
 					<Button
 						variant="solid"
-						size="xl">
+						size="xl"
+						onPress={() => validate()}>
 						<ButtonText>Entrar</ButtonText>
 					</Button>
 					<Button
 						variant="outline"
 						size="xl"
-						onPress={() => validate()}>
+						>
 						<ButtonText>Esqueci minha senha</ButtonText>
 					</Button>
 				</VStack>

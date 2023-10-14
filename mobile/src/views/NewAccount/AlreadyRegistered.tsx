@@ -13,7 +13,7 @@ export function AlreadyRegistered({ route, navigation }) {
 		navigation.dispatch(
 			CommonActions.reset({
 				index: 0,
-				routes: [{ name: 'LoginClient' }],
+				routes: [{ name: 'LoginClient', params: { accountNumber: 0 } }],
 			}),
 		);
 	};

@@ -7,18 +7,28 @@ export async function transactionRoutes(app: FastifyInstance) {
 		await request.jwtVerify();
 	});
   
-	app.get('/transactions', async (request) => {
-		 const transactions = await prisma.transaction.findMany({
+	app.get('/userInfo', async (request) => {
+		 const account = await prisma.account.findMany({
 				where: {
-					account_id: request.user.account_id,
+					id: request.user.account_id,
 				},
-				orderBy: {
-					created_at: 'asc',
-				},
+				include: {
+					user: true,
+					pix_keys: true,
+					supervisor: true,
+					transactions: {
+						include: {
+							receiver: true,
+						},
+						orderBy: {
+							created_at: "desc",
+						}
+				}}
 			});
 
-      return transactions
+      return { account }
 	});
+
 app.get('/transactions/:id', async (request, reply) => {
 	const paramsSchema = z.object({
 		id: z.string().uuid(),
@@ -59,13 +69,13 @@ app.post('/transactions/pix', async (request) => {
 	const bodySchema = z.object({
   value: z.number(),
   comment: z.string(),
-  receiver_id: z.string(),
+  pix_key: z.string(),
 	});
 
 	const { 
     value,
     comment,
-    receiver_id
+    pix_key
   } = bodySchema.parse(request.body);
 
   let settledDate;
@@ -82,12 +92,18 @@ app.post('/transactions/pix', async (request) => {
     status = 'aprovada';
   }
 
+	const receiver = await prisma.receiver.findUniqueOrThrow({
+		where: {
+			pix_key,
+		}
+	});
+
 	const transaction = await prisma.transaction.create({
 		data: {
 			type: 'pix',
 			debit_credit: 'D',
 			value,
-			receiver_id,
+			receiver_id: receiver.id,
 			comment,
       status,
 			account_id: request.user.account_id,
@@ -95,8 +111,63 @@ app.post('/transactions/pix', async (request) => {
 		},
 	});
 
+	await prisma.account.update({
+		where: {
+			id: request.user.account_id,
+		},
+		data: {
+			balance: account.balance.plus(value)
+		}
+	})
+
 	return transaction;
 });
+
+app.put('/balanceupdate', async (request) => {
+	const bodySchema = z.object({
+		value: z.number()
+	});
+
+	const account = await prisma.account.findUnique({
+    where: {
+      id: request.user.account_id
+    }
+  })
+
+	const { value } = bodySchema.parse(request.body);
+	await prisma.account.update({
+		where: {
+			id: request.user.account_id,
+		},
+		data: {
+			balance: account.balance.plus(value)
+		}
+	})
+});
+
+app.post('/receiver', async (request) => {
+	const bodySchema = z.object({
+		name: z.string(),
+		document_type: z.string(),
+		document_number: z.string(),
+		pix_key: z.string(),
+		bank: z.string()
+	});
+
+	const { name, document_type, document_number,	pix_key, bank } = bodySchema.parse(request.body);
+
+	const receiver = await prisma.receiver.create({
+		data: {
+			name,
+			document_type,
+			document_number,
+			pix_key,
+			bank
+		}
+	});
+
+	return receiver;
+})
 
 app.post('/transactions/payment', async (request) => {
 	const bodySchema = z.object({

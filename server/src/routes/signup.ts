@@ -23,7 +23,7 @@ export async function signUpRoutes(app: FastifyInstance) {
 				cpf,
 			},
 			include: {
-				emails: true
+				account: true,
 			}
 		});
 		return user;

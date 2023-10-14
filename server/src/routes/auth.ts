@@ -15,7 +15,9 @@ export async function authRoutes(app: FastifyInstance) {
 		const account = await prisma.account.findUniqueOrThrow({
 			where: {
 				account_number,
-			},
+			}, include: {
+				user: true,
+			}
 		});
 
 		const isPasswordValid = await bcrypt.compare(password, account.password);
@@ -27,6 +29,7 @@ export async function authRoutes(app: FastifyInstance) {
 		const token = app.jwt.sign(
 			{
 				account_number: account.account_number,
+				account_id: account.id,
 				user_id: account.user_id,
 			},
 			{
@@ -35,7 +38,7 @@ export async function authRoutes(app: FastifyInstance) {
 			},
 		);
 
-		return { token };
+		return { token, user_id: account.user_id, user_name: account.user.name };
 
 	});
 
@@ -55,7 +58,7 @@ export async function authRoutes(app: FastifyInstance) {
 
 		const isPasswordValid = await bcrypt.compare(password, supervisor.password);
 
-		if (!isPasswordValid) {
+		if(!isPasswordValid){
 			return reply.status(401).send();
 		}
 
@@ -70,6 +73,6 @@ export async function authRoutes(app: FastifyInstance) {
 			},
 		);
 
-		return { token };
+		return { token, supervisorName: supervisor.name, supervisor_id: supervisor.id };
 	});
 }

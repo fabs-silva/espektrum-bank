@@ -8,11 +8,13 @@ import {
 	Text,
 	VStack,
 } from '@gluestack-ui/themed';
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from 'react';
-import { Keyboard } from 'react-native';
+import { Alert, Keyboard } from 'react-native';
 import { Logo } from '../../components/Logo';
+import { api } from '../../utils/axios';
 
-export function LoginSupervisor() {
+export function LoginSupervisor({ navigation }) {
 	const [cpfInput, setCpfInput] = useState("");
 	const [passwordInput, setPasswordInput] = useState("");
 
@@ -37,8 +39,26 @@ export function LoginSupervisor() {
 		}
 	}
 
-	const onSubmit = () => {
-		return null
+	const onSubmit = async () => {
+		api.post('/signIn/supervisor', {
+			cpf: cpfInput,
+			password: passwordInput,
+		}).then(response => {
+			const { token, supervisor_name } = response.data;
+
+    	SecureStore.setItemAsync("token", token);
+
+			navigation.navigate('HomeSupervisor', {
+				supervisor_name,
+			})
+		}).catch(error => {
+			console.log(JSON.stringify(error.response.data.message))
+			if(error.response.status === 401 || error.response.data.message === 'No Supervisor found'){
+				Alert.alert('Erro', 'CPF e/ou senha inválidos.');
+			} else {
+				Alert.alert('Erro', 'Não foi possível realizar o login.');
+			}
+		});		
 	}
 	
 	return (
@@ -89,13 +109,14 @@ export function LoginSupervisor() {
 					w="100%">
 					<Button
 						variant="solid"
-						size="xl">
+						size="xl"
+						onPress={() => validate()}>
 						<ButtonText>Entrar</ButtonText>
 					</Button>
 					<Button
 						variant="outline"
 						size="xl"
-						onPress={() => validate()}>
+						>
 						<ButtonText>Esqueci minha senha</ButtonText>
 					</Button>
 				</VStack>

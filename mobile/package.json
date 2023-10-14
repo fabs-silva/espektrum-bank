@@ -20,6 +20,8 @@
     "axios": "^1.5.1",
     "expo": "~49.0.13",
     "expo-camera": "~13.4.4",
+    "expo-crypto": "~12.4.1",
+    "expo-secure-store": "~12.3.1",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "pullstate": "^1.25.0",
@@ -30,14 +32,13 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-uuid": "^2.0.1",
-    "expo-auth-session": "~5.0.2",
-    "expo-crypto": "~12.4.1",
-    "expo-secure-store": "~12.3.1"
+    "uninstall": "^0.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "^18.2.21",
     "@types/react-native": "^0.72.2",
+    "@types/react-native-vector-icons": "^6.4.15",
     "react-native-svg-transformer": "^1.1.0",
     "typescript": "^5.2.2"
   },

@@ -13,10 +13,6 @@ import ImageHome from '../../assets/image_home.svg';
 import { Logo } from '../../components/Logo';
 
 export function NotLogged({ navigation }) {
-	const pressButton = (nextView: string) => {
-		navigation.navigate(nextView);
-	};
-
 	const [showModal, setShowModal] = useState(false);
 	const ref = useRef(null);
 
@@ -58,7 +54,9 @@ export function NotLogged({ navigation }) {
 									mb="$6"
 									onPress={() => {
 										setShowModal(false);
-										pressButton('LoginClient');
+										navigation.navigate("LoginClient", {
+											accountNumber: 0
+										});
 									}}>
 									<ButtonText>Sou cliente</ButtonText>
 								</Button>
@@ -67,7 +65,7 @@ export function NotLogged({ navigation }) {
 									mb="$6"
 									onPress={() => {
 										setShowModal(false);
-										pressButton('LoginSupervisor');
+										navigation.navigate('LoginSupervisor');
 									}}>
 									<ButtonText>Sou responsável</ButtonText>
 								</Button>
@@ -77,7 +75,7 @@ export function NotLogged({ navigation }) {
 					<Button
 						variant="outline"
 						size="xl"
-						onPress={() => pressButton('CheckCpf')}>
+						onPress={() => navigation.navigate('CheckCpf')}>
 						<ButtonText>Quero abrir uma conta</ButtonText>
 					</Button>
 				</VStack>
