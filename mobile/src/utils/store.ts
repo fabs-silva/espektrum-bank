@@ -67,3 +67,100 @@ export const RegisterClientStore = new Store<IRegisterClientStore>({
 	supervisor_phone_number: null,
 	supervisor_password: null,
 });
+
+interface IEmail{
+	id: string;
+	email_address: string;
+	user_id: string;
+	supervisor_id: string | null;
+}
+
+interface ITelephone{
+	id: string;
+	phone_number: string;
+	user_id: string;
+	supervisor_id: string | null
+}
+
+interface IUser {
+	id: string;
+	name: string;
+	birthday: Date | '';
+	birth_country: string;
+	genre_identity: string;
+	cpf: string;
+	identification: string;
+	issuing_body: string;
+	issuing_state: string;
+	selfie_url: string;
+	emails: IEmail[];
+	telephones: ITelephone[];
+}
+
+interface IPixKey{
+	id: string;
+	key: string;
+	key_type: string;
+	account_id: string;
+	created_at: Date | '';
+}
+
+interface ITransaction{
+	id: string;
+	type: string;
+	debit_credit: string;
+	value: number;
+	comment: string;
+	status: string;
+	receiver_id: string;
+	account_id: string;
+	created_at: Date | '';
+	programmed_to: Date | '';
+	approved_at: Date | null,
+	settled_at: Date | null;
+	receiver: IReceiver;
+}
+
+interface ISupervisor{
+	id: string;
+	name: string;
+	birthday: Date | '';
+	degree_kinship: string;
+	genre_identity: string;
+	cpf: string;
+	identification: string;
+	issuing_body: string;
+	issuing_state: string;
+	password: string;
+}
+
+interface IReceiver{
+	id: string;
+	name: string;
+	document_type: string;
+	document_number: string;
+	pix_key: string;
+	bank: string;
+}
+
+interface IUser{
+	id: string;
+	account_type: string;
+	account_number: string;
+	password: string;
+	balance: number;
+	user_id: string;
+	created_at: Date;
+	supervisor_id: string | null;
+	pixKeys: IPixKey[];
+	supervisor: ISupervisor | null;
+	transactions: ITransaction[];
+}
+
+interface IUserInfoStore {
+	userInfo: IUser | {};
+}
+
+export const UserInfoStore = new Store<IUserInfoStore>({
+	userInfo: {}
+});

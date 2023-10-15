@@ -93,7 +93,7 @@ model PixKey {
   id String @id @default(uuid())
   key String @unique
   key_type String
-  account_id String @unique
+  account_id String
   account Account @relation(fields: [account_id], references: [id] )
   created_at DateTime @default(now())
 }
@@ -110,6 +110,7 @@ model Transaction {
   account_id String
   account Account @relation(fields: [account_id], references: [id] )
   created_at DateTime @default(now())
+  programmed_to DateTime @default(now())
   approved_at DateTime?
   settled_at DateTime?
 }
@@ -118,7 +119,7 @@ model Receiver {
   id String @id @default(uuid())
   name String
   document_type String
-  document_number String @unique
+  document_number String
   pix_key String? @unique
   bank String
   transaction Transaction[]

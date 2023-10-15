@@ -65,6 +65,7 @@ export async function authRoutes(app: FastifyInstance) {
 		const token = app.jwt.sign(
 			{
 				supervisor_name: supervisor.name,
+				supervisor_id: supervisor.id,
 				cpf: supervisor.cpf,
 			},
 			{
@@ -73,6 +74,6 @@ export async function authRoutes(app: FastifyInstance) {
 			},
 		);
 
-		return { token, supervisorName: supervisor.name, supervisor_id: supervisor.id };
+		return { token, supervisor_name: supervisor.name, supervisor_id: supervisor.id };
 	});
 }

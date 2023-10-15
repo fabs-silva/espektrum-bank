@@ -225,9 +225,17 @@ export async function signUpRoutes(app: FastifyInstance) {
 			const accountNumber = Math.floor(1000000 + Math.random() * 9000000);
 
 			const hashUser = await bcrypt.hash(password, 10);
+
+			let supervisor = await prisma.supervisor.findFirst({
+				where: {
+					cpf: supervisor_cpf,
+				}
+			})
+
+			if(!supervisor){
 			const hashSupervisor = await bcrypt.hash(supervisor_password, 10);
 
-			const supervisor = await prisma.supervisor.create({
+			supervisor = await prisma.supervisor.create({
 				data: {
 					name: supervisor_name,
 					birthday: supervisor_birthday,
@@ -258,7 +266,8 @@ export async function signUpRoutes(app: FastifyInstance) {
 					telephones: true
 				}
 			});
-
+			}
+			
 			const user = await prisma.user.create({
 				data: {
 					name,

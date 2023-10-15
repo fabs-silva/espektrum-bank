@@ -22,8 +22,15 @@ import { SupervisorConfirmData } from '../views/Onboarding/SupervisorConfirmData
 import { SupervisorDocuments } from '../views/Onboarding/SupervisorDocuments';
 import { SupervisorPassword } from '../views/Onboarding/SupervisorPassword';
 import { TakeSelfie } from '../views/Onboarding/TakeSelfie';
+import { Balance } from '../views/Transactions/Balance';
+import { ConfirmPix } from '../views/Transactions/ConfirmPix';
+import { FindPixKeyToSend } from '../views/Transactions/FindPixKeyToSend';
 import { Home } from '../views/Transactions/Home';
 import { HomeSupervisor } from '../views/Transactions/HomeSupervisor';
+import { PixHome } from '../views/Transactions/PixHome';
+import { PixKey } from '../views/Transactions/PixKey';
+import PixReceipt from '../views/Transactions/PixReceipt';
+import { SendPix } from '../views/Transactions/SendPix';
 
 const Stack = createNativeStackNavigator();
 
@@ -163,6 +170,41 @@ export function MainNavigation() {
 					name="HomeSupervisor"
 					component={HomeSupervisor}
 					options={{ title: 'Página inicial' }}
+				/>
+				<Stack.Screen
+					name="PixHome"
+					component={PixHome}
+					options={{ title: 'PIX' }}
+				/>
+				<Stack.Screen
+					name="Balance"
+					component={Balance}
+					options={{ title: 'Extrato' }}
+				/>
+				<Stack.Screen
+					name="PixKey"
+					component={PixKey}
+					options={{ title: 'Cadastrar chave PIX' }}
+				/>
+				<Stack.Screen
+					name="FindPixKeyToSend"
+					component={FindPixKeyToSend}
+					options={{ title: 'Fazer um PIX' }}
+				/>
+				<Stack.Screen
+					name="SendPix"
+					component={SendPix}
+					options={{ title: 'Fazer um PIX' }}
+				/>
+				<Stack.Screen
+					name="ConfirmPix"
+					component={ConfirmPix}
+					options={{ title: 'Fazer um PIX' }}
+				/>
+				<Stack.Screen
+					name="PixReceipt"
+					component={PixReceipt}
+					options={{ title: 'Comprovante PIX' }}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>

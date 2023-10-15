@@ -55,7 +55,6 @@ export function LoginClient( { navigation, route }) {
 				user_name,
 			})
 		}).catch(error => {
-			console.log(JSON.stringify(error.response.data.message))
 			if(error.response.status === 401 || error.response.data.message === 'No Account found'){
 				Alert.alert('Erro', 'Número da conta e/ou senha inválidos.');
 			} else {

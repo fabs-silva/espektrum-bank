@@ -1,36 +1,24 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { HStack, Text, VStack } from '@gluestack-ui/themed';
-import { CommonActions } from '@react-navigation/native';
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Alert, ScrollView, TouchableOpacity } from 'react-native';
 import PixLogo from '../../assets/pix.svg';
 import { Transaction } from '../../components/Transaction';
 import { api } from '../../utils/axios';
-import { capitalizeFirstLetter } from '../../utils/utilfunctions';
+import { UserInfoStore } from '../../utils/store';
+import { capitalizeFirstLetter, creditDebit, signOut, welcomeGreeting } from '../../utils/utilfunctions';
 
 export function Home({ navigation, route }) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => null,
+      headerLeft: () => null
     });
   }, [navigation]);
 
-  const { user_name } = route.params;
-
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(true);
-
-  const welcome = (genre_identity: string) => {
-    if(genre_identity === 'mulher cisgênero' || genre_identity === 'mulher transgênero'){
-      return "Bem-vinda"
-    } else if(genre_identity === 'não binário' || genre_identity === 'outro'){
-      return "Bem-vindx"
-    } else {
-      return "Bem-vindo"
-    }
-  }
 
     async function fetchData() {
     const token = await SecureStore.getItemAsync("token");
@@ -43,21 +31,11 @@ export function Home({ navigation, route }) {
     return response;
   }
 
-  async function signOut(){
-    await SecureStore.deleteItemAsync("token");
-
-		navigation.dispatch(
-			CommonActions.reset({
-				index: 0,
-				routes: [{ name: 'NotLogged' }],
-			}),
-		);
-  }
-
   useEffect(() => {   
     setLoading(true); 
     fetchData().then(response => {
       setUserInfo(response.data.account[0]);
+      UserInfoStore.update(s => response.data.account[0]);
     }).catch(error => {
       Alert.alert("Erro", "Não foi possível acessar seus dados.")
     }).finally(() => setLoading(false));
@@ -72,8 +50,8 @@ export function Home({ navigation, route }) {
 			bgColor="$backgroundDark100"
 			p="$10">
       <HStack justifyContent='space-between' alignItems='center'>
-      <Text size="xl">{welcome(userInfo.user.genre_identity)}, <Text size="xl" fontFamily="Jost_700Bold">{user_name.slice(0, user_name.indexOf(" "))}</Text></Text>
-      <TouchableOpacity onPress={() => signOut()}>
+      <Text size="xl">{welcomeGreeting(userInfo.user.genre_identity)}, <Text size="xl" fontFamily="Jost_700Bold">{userInfo.user.name.slice(0, userInfo.user.name.indexOf(" "))}</Text></Text>
+      <TouchableOpacity onPress={() => signOut(navigation)}>
       <MaterialCommunityIcons name="exit-to-app" size={26} />
       </TouchableOpacity>
       </HStack>
@@ -104,7 +82,7 @@ export function Home({ navigation, route }) {
       </VStack>
     </HStack>
     <HStack justifyContent='space-between' mt="$12">
-      <TouchableOpacity  style={{ width: "30%"}}>
+      <TouchableOpacity  style={{ width: "30%"}} onPress={() => navigation.navigate('Balance')}>
       <VStack
         borderRadius={5}
 				borderWidth="$1"
@@ -117,7 +95,7 @@ export function Home({ navigation, route }) {
         <Text size="xs" fontWeight="700">Extrato</Text>
       </VStack>
       </TouchableOpacity>
-      <TouchableOpacity  style={{ width: "30%"}}>
+      <TouchableOpacity  style={{ width: "30%"}} onPress={() => navigation.navigate('PixHome')}>
       <VStack
         borderRadius={5}
 				borderWidth="$1"
@@ -130,7 +108,7 @@ export function Home({ navigation, route }) {
         <Text size="xs" fontWeight="700">Pix</Text>
       </VStack>
       </TouchableOpacity>
-      <TouchableOpacity  style={{ width: "30%"}}>
+      <TouchableOpacity  style={{ width: "30%"}} onPress={() => navigation.navigate('Payment')}>
       <VStack
         borderRadius={5}
 				borderWidth="$1"
@@ -147,8 +125,10 @@ export function Home({ navigation, route }) {
     <VStack mt="$12">
       <Text size="lg" fontWeight="700" mb="$4">Últimas Transações</Text>
       <VStack gap={12}>
-        {userInfo.transactions.map(t => (
-          <Transaction key={t.id} payer={t.receiver.name} transactionType={capitalizeFirstLetter(t.type)} transactionDate={new Date(t.settled_at)} transactionValue={parseFloat(t.value)} />
+         {userInfo.transactions.length === 0 
+          ? (<Text>Não existem transações para esta conta.</Text>)
+          :  userInfo.transactions.slice(0,4).map(t => (
+          <Transaction key={t.id} payer={t.receiver.name} transactionType={capitalizeFirstLetter(t.type) + " " + creditDebit(t.debit_credit)} transactionDate={new Date(t.settled_at)} transactionValue={parseFloat(t.value)} debitCredit={t.debit_credit} />
         ))}
       </VStack>
     </VStack>

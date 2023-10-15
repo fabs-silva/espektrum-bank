@@ -52,7 +52,6 @@ export function LoginSupervisor({ navigation }) {
 				supervisor_name,
 			})
 		}).catch(error => {
-			console.log(JSON.stringify(error.response.data.message))
 			if(error.response.status === 401 || error.response.data.message === 'No Supervisor found'){
 				Alert.alert('Erro', 'CPF e/ou senha inválidos.');
 			} else {

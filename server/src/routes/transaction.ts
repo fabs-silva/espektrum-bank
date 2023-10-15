@@ -13,7 +13,12 @@ export async function transactionRoutes(app: FastifyInstance) {
 					id: request.user.account_id,
 				},
 				include: {
-					user: true,
+					user: {
+						include: {
+							emails: true,
+							telephones: true
+						}
+					},
 					pix_keys: true,
 					supervisor: true,
 					transactions: {
@@ -27,6 +32,32 @@ export async function transactionRoutes(app: FastifyInstance) {
 			});
 
       return { account }
+	});
+
+	app.get('/supervisorInfo', async (request) => {
+		 const supervisor = await prisma.supervisor.findFirst({
+				where: {
+					id: request.user.supervisor_id,
+				},
+				include: {
+					supervised_accounts: {
+						include: {
+							user: true,
+							pix_keys: true,
+							transactions: {
+								include: {
+									receiver: true,
+								},
+								orderBy: {
+									created_at: "desc",
+								}
+							}
+						},
+					},
+				}
+			});
+
+      return { supervisor }
 	});
 
 app.get('/transactions/:id', async (request, reply) => {
@@ -48,7 +79,7 @@ app.get('/transactions/:id', async (request, reply) => {
 	return transaction;
 });
 
-app.get('/pixReceiver', async (request, reply) => {
+app.post('/pixReceiver', async (request, reply) => {
   const bodySchema = z.object({
     pix_key: z.string(),
   });
@@ -65,17 +96,74 @@ app.get('/pixReceiver', async (request, reply) => {
   
 })
 
-app.post('/transactions/pix', async (request) => {
+app.post('/pixKey', async (request, reply) => {
+	const bodySchema = z.object({
+  pix_key: z.string(),
+	key_type: z.string(),
+	});
+
+	const { 
+    pix_key, key_type
+  } = bodySchema.parse(request.body);
+
+	const user = await prisma.user.findFirst({
+		where: {
+			id: request.user.user_id
+		},
+	});
+
+	const existentPixKey = await prisma.pixKey.findUnique({
+		where: {
+			key: pix_key,
+		}
+	});
+
+	if(existentPixKey){
+		return reply.status(500).send({message: "Chave PIX já cadastrada."})
+	}
+
+	const pixKey = await prisma.pixKey.create({
+		data:{
+			key: pix_key,
+			key_type,
+			account_id: request.user.account_id
+		}
+	});
+
+	const receiver = await prisma.receiver.findUnique({
+		where: {
+			pix_key,
+		}
+	});
+
+	if(!receiver){
+		await prisma.receiver.create({
+			data: {
+				name: user.name,
+				document_type: "cpf",
+				document_number: user.cpf,
+				pix_key,
+				bank: "Espektrum Bank"
+			}
+		})
+	}
+
+	return pixKey
+})
+
+app.post('/transactions/pix', async (request, reply) => {
 	const bodySchema = z.object({
   value: z.number(),
   comment: z.string(),
   pix_key: z.string(),
+	programmed_to: z.coerce.date(),
 	});
 
 	const { 
     value,
     comment,
-    pix_key
+    pix_key,
+		programmed_to
   } = bodySchema.parse(request.body);
 
   let settledDate;
@@ -86,6 +174,10 @@ app.post('/transactions/pix', async (request) => {
       id: request.user.account_id
     }
   })
+
+	if(account.balance.comparedTo(value) === -1){
+		return reply.status(401).send();
+	}
 
   if(account?.account_type === 'independente'){
     settledDate = new Date(Date.now());
@@ -108,6 +200,7 @@ app.post('/transactions/pix', async (request) => {
       status,
 			account_id: request.user.account_id,
       settled_at: settledDate,
+			programmed_to,
 		},
 	});
 
@@ -116,7 +209,7 @@ app.post('/transactions/pix', async (request) => {
 			id: request.user.account_id,
 		},
 		data: {
-			balance: account.balance.plus(value)
+			balance: account.balance.minus(value)
 		}
 	})
 

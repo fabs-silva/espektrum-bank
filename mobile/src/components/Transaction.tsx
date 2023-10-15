@@ -6,9 +6,10 @@ type TransactionProps = {
   transactionType: string;
   transactionDate: Date;
   transactionValue: number;
+  debitCredit: string;
 }
 
-export function Transaction({payer, transactionType, transactionDate, transactionValue}: TransactionProps) {
+export function Transaction({payer, transactionType, transactionDate, transactionValue, debitCredit}: TransactionProps) {
 	return (
 		<HStack
 			alignItems="center"
@@ -21,8 +22,8 @@ export function Transaction({payer, transactionType, transactionDate, transactio
         <Text size="md" fontWeight="700">{payer}</Text>
         <Text size="sm">{transactionType}</Text>
       </VStack>
-      <VStack>
-        <Text size="md" fontWeight="700">R$ {transactionValue.toFixed(2)}</Text>
+      <VStack alignItems='flex-end'>
+        <Text size="md" fontWeight="700" color={debitCredit === "D" ? "$error800" : "$blue800"}>{debitCredit === "D" ? "-" : ""} R$ {transactionValue.toFixed(2)}</Text>
         <Text size="sm">{transactionDate.toLocaleDateString()}</Text>
       </VStack>
 		</HStack>
